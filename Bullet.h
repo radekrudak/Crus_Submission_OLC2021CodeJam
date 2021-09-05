@@ -12,7 +12,7 @@ public:
         PosX = fPX;
         PosY = fPY;
         Velocity = {cos(fPA)*fSpeed,sin(fPA)*fSpeed};
-        std::cout<<"\n Hello World \n";
+        //std::cout<<"\n Hello World \n";
 
     }
     olc::vf2d Move(float fFrameTime) // fFrame tiem is esaped time
@@ -20,7 +20,7 @@ public:
         PosX += Velocity.x *fFrameTime;
         PosY += Velocity.y *fFrameTime;
         olc::vf2d ret= {PosX,PosY};
-        std::cout<<"\n Wieeeew \n"<<std::to_string(ret.x)<<" "<<std::to_string(ret.y)<<std::endl;
+        //std::cout<<"\n Wieeeew \n"<<std::to_string(ret.x)<<" "<<std::to_string(ret.y)<<std::endl;
         return ret;
 
     }

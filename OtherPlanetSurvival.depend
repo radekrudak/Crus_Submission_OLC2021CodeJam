@@ -1,13 +1,13 @@
 # depslib dependency file v1.0
-1630501697 source:/home/krzyzowiec/Dokumenty/C++/OtherPlanetSurvival/main.cpp
+1630586158 source:/home/krzyzowiec/Dokumenty/C++/OtherPlanetSurvival/main.cpp
 	"Game.h"
 
-1630502283 /home/krzyzowiec/Dokumenty/C++/OtherPlanetSurvival/Game.h
+1630851095 /home/krzyzowiec/Dokumenty/C++/OtherPlanetSurvival/Game.h
 	"olcPixelGameEngine.h"
 	"MapGen.h"
 	"Tile.h"
 	"Bullet.h"
-	<math.h>
+	"Enemy.h"
 	"Controls.h"
 
 1625409002 /home/krzyzowiec/Dokumenty/C++/OtherPlanetSurvival/olcPixelGameEngine.h
@@ -68,12 +68,19 @@
 	<emscripten/html5.h>
 	<emscripten/key_codes.h>
 
-1630337536 /home/krzyzowiec/Dokumenty/C++/OtherPlanetSurvival/MapGen.h
+1630745704 /home/krzyzowiec/Dokumenty/C++/OtherPlanetSurvival/MapGen.h
 	"Tile.h"
 
 1630347177 /home/krzyzowiec/Dokumenty/C++/OtherPlanetSurvival/Tile.h
 
-1630502130 /home/krzyzowiec/Dokumenty/C++/OtherPlanetSurvival/Controls.h
+1630846057 /home/krzyzowiec/Dokumenty/C++/OtherPlanetSurvival/Controls.h
 
-1630413130 /home/krzyzowiec/Dokumenty/C++/OtherPlanetSurvival/Bullet.h
+1630762764 /home/krzyzowiec/Dokumenty/C++/OtherPlanetSurvival/Bullet.h
+
+1630766182 /home/krzyzowiec/Dokumenty/C++/OtherPlanetSurvival/Enemy.h
+
+1630690513 source:/home/krzyzowiec/Dokumenty/C++/OtherPlanetSurvival/FindPath.cpp
+	"olcPixelGameEngine.h"
+
+1630742891 /home/krzyzowiec/Dokumenty/C++/OtherPlanetSurvival/FindPath.h
 

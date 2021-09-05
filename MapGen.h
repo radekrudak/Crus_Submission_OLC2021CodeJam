@@ -14,5 +14,10 @@ void GenerateMap(std::array<std::array<char,1024>,1024> &mapa)
         }
 
     }
+    for (int y=500;y<524;y++)
+        for(int x=500;x<524;x++)
+        {
+         mapa[x][y] = 0;
+        }
 }
 

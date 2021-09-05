@@ -6,18 +6,22 @@ if (GetKey(olc::Key::F1).bPressed)
 
 }
 
-if (GetKey(olc::Key::CTRL).bPressed)
-{
-    isFightMode = !isFightMode;
-    fModeTextFading =1.0f;
-    ModeTextLap = 50;
-}
+//if (GetKey(olc::Key::CTRL).bPressed)
+//{
+//    isFightMode = !isFightMode;
+//    fModeTextFading =1.0f;
+//    ModeTextLap = 50;
+//}
 
-if (GetKey(olc::Key::D).bHeld)
-{                                                   // if key is pressed change players location, if this location happend to be
-                                                    //in tile with  colision enabled (isColide var with by isColisive) undo change
-    fPlayerX+= MovingSpeed*fElapsedTime;           /// Why i have to subtract one ? Well i also want know.
-    if (vTiles[vTileMap[fPlayerX-1][fPlayerY-1]]->isColisive())
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+if (!isFightMode)
+{
+  // Build  /resoursce mode
+    if (GetKey(olc::Key::D).bHeld)
+{
+    fPlayerX+= MovingSpeed*fElapsedTime;
+    if (vTiles[vTileMap[fPlayerX][fPlayerY]]->isColisive())
     {
         fPlayerX-= MovingSpeed*fElapsedTime;
     }
@@ -25,7 +29,7 @@ if (GetKey(olc::Key::D).bHeld)
 if (GetKey(olc::Key::A).bHeld)
 {
     fPlayerX-= MovingSpeed*fElapsedTime;
-        if (vTiles[vTileMap[fPlayerX-1][fPlayerY-1]]->isColisive())
+        if (vTiles[vTileMap[fPlayerX][fPlayerY]]->isColisive())
     {
         fPlayerX+= MovingSpeed*fElapsedTime;
     }
@@ -33,7 +37,7 @@ if (GetKey(olc::Key::A).bHeld)
 if (GetKey(olc::Key::S).bHeld)
 {
     fPlayerY+= MovingSpeed*fElapsedTime;
-        if (vTiles[vTileMap[fPlayerX-1][fPlayerY-1]]->isColisive())
+        if (vTiles[vTileMap[fPlayerX][fPlayerY]]->isColisive())
     {
          fPlayerY-= MovingSpeed*fElapsedTime;
     }
@@ -41,16 +45,14 @@ if (GetKey(olc::Key::S).bHeld)
 if (GetKey(olc::Key::W).bHeld)
 {
     fPlayerY-= MovingSpeed*fElapsedTime;
-            if (vTiles[vTileMap[fPlayerX-1][fPlayerY-1]]->isColisive())
+            if (vTiles[vTileMap[fPlayerX][fPlayerY]]->isColisive())
     {
          fPlayerY+= MovingSpeed*fElapsedTime;
     }
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-switch (isFightMode)
-{
-case 0:  // Build  /resoursce mode
+
+
     if (GetKey(olc::Key::K1).bHeld)
     {
         SelectedBuildTile = 2;
@@ -64,7 +66,7 @@ case 0:  // Build  /resoursce mode
 
             (int)((float)GetMouseY()/TileSize+fCameraY)==(int)fMouseMapY &&
 
-            GetMouse(0).bHeld && vTiles[vTileMap[fMouseMapX-1][fMouseMapY-1]]->GetResource()  &&
+            GetMouse(0).bHeld && vTiles[vTileMap[fMouseMapX][fMouseMapY]]->GetResource()  &&
             fMousePlayerDistance < fReachDistance
 
             )
@@ -79,8 +81,8 @@ case 0:  // Build  /resoursce mode
         if (fDestruction >1)
         {
             fDestruction =0.0f;
-            aResourses[vTiles[vTileMap[fMouseMapX-1][fMouseMapY-1]]->GetResource()] += vTiles[vTileMap[fMouseMapX-1][fMouseMapY-1]]->GetRQuantity();
-            vTileMap[fMouseMapX-1][fMouseMapY-1] = vTiles[vTileMap[fMouseMapX-1][fMouseMapY-1]]->GetBase();
+            aResourses[vTiles[vTileMap[fMouseMapX][fMouseMapY]]->GetResource()] += vTiles[vTileMap[fMouseMapX][fMouseMapY]]->GetRQuantity();
+            vTileMap[fMouseMapX][fMouseMapY] = vTiles[vTileMap[fMouseMapX][fMouseMapY]]->GetBase();
 
         }
 
@@ -94,11 +96,11 @@ case 0:  // Build  /resoursce mode
 
             (int)((float)GetMouseY()/TileSize+fCameraY)==(int)fMouseMapY &&
 
-            GetMouse(1).bHeld && vTiles[vTileMap[fMouseMapX-1][fMouseMapY-1]]->GetIsFloor() &&
+            GetMouse(1).bHeld && vTiles[vTileMap[fMouseMapX][fMouseMapY]]->GetIsFloor() &&
 
             (aResourses[vTiles[SelectedBuildTile]->GetResource()] -vTiles[SelectedBuildTile]->GetResourceRequirement())>=0 &&
 
-            vTileMap[fMouseMapX-1][fMouseMapY-1] == vTiles[SelectedBuildTile]->GetBase() &&
+            vTileMap[fMouseMapX][fMouseMapY] == vTiles[SelectedBuildTile]->GetBase() &&
 
             fMousePlayerDistance < fReachDistance
 
@@ -118,7 +120,7 @@ case 0:  // Build  /resoursce mode
             //aResourses[vTiles[vTileMap[fMouseMapX-1][fMouseMapY-1]]->GetResource()] += vTiles[vTileMap[fMouseMapX-1][fMouseMapY-1]]->GetRQuantity();
 
             aResourses[vTiles[SelectedBuildTile]->GetResource()] -=vTiles[SelectedBuildTile]->GetResourceRequirement();
-            vTileMap[fMouseMapX-1][fMouseMapY-1] = SelectedBuildTile;
+            vTileMap[fMouseMapX][fMouseMapY] = SelectedBuildTile;
 
 
         }
@@ -128,19 +130,21 @@ case 0:  // Build  /resoursce mode
     {
         fConstruction =0.0f;
     }
-
-    break;
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    case 1:
+else if(Health>0)
+{
     //std::string strAmmo = "Ammo: "
     std::string strHealth= "Health";
     DrawString(ScreenWidth()/2-strHealth.size()*8/2,ScreenHeight()-20,strHealth);
-    FillRect(ScreenWidth()/2-strHealth.size()*8/2,ScreenHeight()-10,strHealth.size()*8,5, olc::RED);
+    FillRect(ScreenWidth()/2-strHealth.size()*8/2,ScreenHeight()-10,strHealth.size()*8*Health,5, olc::RED);
+     DrawRect(ScreenWidth()/2-strHealth.size()*8/2,ScreenHeight()-10,strHealth.size()*8,5, olc::WHITE);
     if (GetMouse(0).bPressed)
     {
         vBullets.push_back(new Bullet(fPlayerX,fPlayerY,fPlayerA));
     }
-    break;
+
+
+
 }

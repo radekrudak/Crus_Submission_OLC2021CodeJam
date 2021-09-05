@@ -33,6 +33,7 @@
 		</Compiler>
 		<Unit filename="Bullet.h" />
 		<Unit filename="Controls.h" />
+		<Unit filename="FindPath.h" />
 		<Unit filename="Game.h" />
 		<Unit filename="MapGen.h" />
 		<Unit filename="Tile.h" />
