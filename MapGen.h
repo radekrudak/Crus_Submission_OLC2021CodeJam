@@ -1,23 +1,28 @@
 #pragma once
+#include "olcPixelGameEngine.h"
 #include "Tile.h"
-void GenerateMap(std::array<std::array<char,1024>,1024> &mapa)
+void GenerateMap(std::vector<std::vector< std::vector<Tile*> > >  &mapa, std::vector<Tile*> &Tiles)
 {
-    for (auto &i:mapa)
+
+    for(int x =0; x<1024; x++)
     {
-        for (auto &b:i)
+        std::vector<std::vector<Tile*>> v2d;
+        v2d.reserve(1024);
+
+        for(int y =0; y<1024; y++)
         {
-            if (rand()%10 > 3)
-                b=0;
-            else
-                b=1;
+            std::vector<Tile*> v1d;
+            v1d.push_back(Tiles[4] );
+            v1d.push_back(Tiles[0] );
+            if (rand()%10 < 1)
+                v1d.push_back(Tiles[1])  ;
+
+            v2d.push_back(v1d);
 
         }
-
+        std::cout<<"Row :"<<x<<" Finished ! \n";
+        mapa.push_back(v2d);
     }
-    for (int y=500;y<524;y++)
-        for(int x=500;x<524;x++)
-        {
-         mapa[x][y] = 0;
-        }
 }
+
 

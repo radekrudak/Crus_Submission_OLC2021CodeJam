@@ -35,6 +35,7 @@
 		<Unit filename="Controls.h" />
 		<Unit filename="FindPath.h" />
 		<Unit filename="Game.h" />
+		<Unit filename="Item.h" />
 		<Unit filename="MapGen.h" />
 		<Unit filename="Tile.h" />
 		<Unit filename="main.cpp" />

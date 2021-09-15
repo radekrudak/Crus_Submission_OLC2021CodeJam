@@ -1,19 +1,9 @@
 #pragma once
+#include "FindPath.h"
 static const int MapSize = 1024;
 
 
-struct sNode
-{
-bool bVisited = false;
-float fGlobalGoal  ;
-float fLocalGoal ;
-int x;
-int y;
 
-std::vector<sNode*> vNeighbours;
-sNode *parent;
-
-};
 
 class Enemy
 {   public:

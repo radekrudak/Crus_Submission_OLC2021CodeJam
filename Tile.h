@@ -1,26 +1,39 @@
 #pragma once
+#include "Item.h"
+enum class PositionOnTileStack{
+
+    dirt=0,
+    floor = 1,
+    wall=2,
+    roof=3
+
+
+
+};
+//class Item;
+using TZpos = PositionOnTileStack;
 class Tile
 {
+public:
+    std::vector <Item*> vItemsRequired;
+    std::vector <int> vItemsRequiredQuantity;
+    std::vector <Item*> vItemsGathered;
+    std::vector <int> vItemsGatheredQuantity ;
+
+protected:
     int ID;
-    int Base =0;
-    int Resource  =0; // type of resource it is required to build/ is gathered after gathering
-    int RQuantity =0; // quantity of resources gathered after gathering
-    int ResourceRequirement =0; // required number of resources of type Resource (look second varable up) to build this tile
+    PositionOnTileStack ZLevel; // 0 = dirt 1 = Floor 2= Wall 3= Roof
+    std::string Name = "NULL";
     bool isColide =false;
-    bool isFloor = true;
     olc::Sprite *Sprite = nullptr;
     olc::Decal *Decal = nullptr;
 
-    public:
-    Tile(int id =0, olc::Sprite *spr = nullptr, bool c=false,int base = 0,int r=0, int rq=0,int rreq=0, bool floor = true)
+public:
+    Tile(int id =0, olc::Sprite *spr = nullptr, bool colisive=false, PositionOnTileStack Zlvl = PositionOnTileStack::wall)
     {
         ID = id;
-        isColide =c;
-        Base = base;
-        Resource = r;
-        RQuantity = rq;
-        ResourceRequirement =rreq;
-        isFloor = floor;
+        isColide =colisive;
+        ZLevel = Zlvl;
         if (spr)
         {
             Sprite = spr;
@@ -31,36 +44,46 @@ class Tile
 
     olc::Decal *GetDecal()
     {
-     return Decal;
+        return Decal;
     }
     bool isColisive()
     {
         return isColide;
     }
-    void LoadDecal()
+
+    bool isColisivTileInIt( std::vector<Tile *> vTiless)
     {
-      if (Sprite)
-            Decal = new olc::Decal(Sprite);
+        for(auto &i: vTiless)
+        {
+            if (i->isColisive())
+                return true;
+            else
+                continue;
+        }
+        return false;
     }
-    int GetBase()
+    PositionOnTileStack GetZLevel()
     {
-        return Base;
-    }
-    int GetResource()
-    {
-        return Resource;
-    }
-    int GetRQuantity()
-    {
-        return RQuantity;
-    }
-    bool GetIsFloor()
-    {
-        return isFloor;
-    }
-    int GetResourceRequirement()
-    {
-        return ResourceRequirement;
+        return ZLevel;
     }
 };
 
+//#pragma once
+//class TileTwo: public  Tile
+//{
+//
+//    public:
+//    TileTwo(int id =0, olc::Sprite *spr = nullptr, bool colisive=false)
+//    {
+//        ID = id;
+//        isColide =colisive;
+//
+//        if (spr)
+//        {
+//            Sprite = spr;
+//            Decal = new olc::Decal(Sprite);
+//        }
+//
+//    }
+//
+//};

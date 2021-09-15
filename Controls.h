@@ -1,27 +1,23 @@
-
 float MovingSpeed = 4.0f;
+if(GetMouseWheel()>0)
+{
+    fTest+= 1*fElapsedTime;
+}
+if(GetMouseWheel()<0)
+{
+    fTest-= 1*fElapsedTime;
+}
+
 if (GetKey(olc::Key::F1).bPressed)
 {
     isStatsDis = !isStatsDis;
 
 }
 
-//if (GetKey(olc::Key::CTRL).bPressed)
-//{
-//    isFightMode = !isFightMode;
-//    fModeTextFading =1.0f;
-//    ModeTextLap = 50;
-//}
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-if (!isFightMode)
-{
-  // Build  /resoursce mode
-    if (GetKey(olc::Key::D).bHeld)
+if (GetKey(olc::Key::D).bHeld)
 {
     fPlayerX+= MovingSpeed*fElapsedTime;
-    if (vTiles[vTileMap[fPlayerX][fPlayerY]]->isColisive())
+    if (vTileMap[fPlayerX+ MovingSpeed*fElapsedTime][fPlayerY].front()->isColisivTileInIt(vTileMap[fPlayerX+ MovingSpeed*fElapsedTime][fPlayerY]))
     {
         fPlayerX-= MovingSpeed*fElapsedTime;
     }
@@ -29,7 +25,7 @@ if (!isFightMode)
 if (GetKey(olc::Key::A).bHeld)
 {
     fPlayerX-= MovingSpeed*fElapsedTime;
-        if (vTiles[vTileMap[fPlayerX][fPlayerY]]->isColisive())
+    if (vTileMap[fPlayerX- MovingSpeed*fElapsedTime][fPlayerY].front()->isColisivTileInIt(vTileMap[fPlayerX- MovingSpeed*fElapsedTime][fPlayerY]))
     {
         fPlayerX+= MovingSpeed*fElapsedTime;
     }
@@ -37,102 +33,160 @@ if (GetKey(olc::Key::A).bHeld)
 if (GetKey(olc::Key::S).bHeld)
 {
     fPlayerY+= MovingSpeed*fElapsedTime;
-        if (vTiles[vTileMap[fPlayerX][fPlayerY]]->isColisive())
+
+    if (vTileMap[fPlayerX][fPlayerY+ MovingSpeed*fElapsedTime].front()->isColisivTileInIt(vTileMap[fPlayerX][fPlayerY+ MovingSpeed*fElapsedTime]))
     {
-         fPlayerY-= MovingSpeed*fElapsedTime;
+        fPlayerY-= MovingSpeed*fElapsedTime;
     }
 }
 if (GetKey(olc::Key::W).bHeld)
 {
     fPlayerY-= MovingSpeed*fElapsedTime;
-            if (vTiles[vTileMap[fPlayerX][fPlayerY]]->isColisive())
+    if (vTileMap[fPlayerX][fPlayerY- MovingSpeed*fElapsedTime].front()->isColisivTileInIt(vTileMap[fPlayerX][fPlayerY- MovingSpeed*fElapsedTime]))
     {
-         fPlayerY+= MovingSpeed*fElapsedTime;
+        fPlayerY+= MovingSpeed*fElapsedTime;
     }
 }
+
+if (GetKey(olc::Key::CTRL).bPressed)
+{
+    isFightMode = !isFightMode;
+    fModeTextFading =1.0f;
+    ModeTextLap = 50;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+if (!isFightMode)
+{
+    // Build  /resoursce mode
+
 
 
 
     if (GetKey(olc::Key::K1).bHeld)
     {
-        SelectedBuildTile = 2;
+        ChosenBuildTile = 2;
     }
-        if (GetKey(olc::Key::K2).bHeld)
+    if (GetKey(olc::Key::K2).bHeld)
     {
-        SelectedBuildTile = 3;
+        ChosenBuildTile = 3;
     }
     // GATHERING RESOURSERS
-    if ((int)((float)GetMouseX()/TileSize+fCameraX) ==(int)fMouseMapX &&
 
-            (int)((float)GetMouseY()/TileSize+fCameraY)==(int)fMouseMapY &&
+    if ((int)((float)GetMouseX()/TileSize+fCameraX) ==(int)fMouseMapX &&   // those two lines make sure gathering will
+            //not reset when you move a mouse while being still on same block... i guess ?
+            (int)((float)GetMouseY()/TileSize+fCameraY)==(int)fMouseMapY &&//  idk at this point but i will keep them to be safe
 
-            GetMouse(0).bHeld && vTiles[vTileMap[fMouseMapX][fMouseMapY]]->GetResource()  &&
-            fMousePlayerDistance < fReachDistance
-
-            )
-    {
-        std::string GatheringResourses = "Gathering Resourses";
-        DrawString(GetMouseX()-GatheringResourses.size()*8/2,GetMouseY()-20, GatheringResourses);
-        // width
-        FillRect(GetMouseX()-GatheringResourses.size()*8/2, GetMouseY()-10, GatheringResourses.size()*8*fDestruction,10,olc::RED );
-        DrawRect(GetMouseX()-GatheringResourses.size()*8/2, GetMouseY()-10, GatheringResourses.size()*8,10, olc::WHITE );
-
-        fDestruction += 0.6f*fElapsedTime;
-        if (fDestruction >1)
-        {
-            fDestruction =0.0f;
-            aResourses[vTiles[vTileMap[fMouseMapX][fMouseMapY]]->GetResource()] += vTiles[vTileMap[fMouseMapX][fMouseMapY]]->GetRQuantity();
-            vTileMap[fMouseMapX][fMouseMapY] = vTiles[vTileMap[fMouseMapX][fMouseMapY]]->GetBase();
-
-        }
-
-    }
-    else
-    {
-        fDestruction =0.0f;
-    }
-        // BUILDING
-    if ((int)((float)GetMouseX()/TileSize+fCameraX) ==(int)fMouseMapX &&
-
-            (int)((float)GetMouseY()/TileSize+fCameraY)==(int)fMouseMapY &&
-
-            GetMouse(1).bHeld && vTiles[vTileMap[fMouseMapX][fMouseMapY]]->GetIsFloor() &&
-
-            (aResourses[vTiles[SelectedBuildTile]->GetResource()] -vTiles[SelectedBuildTile]->GetResourceRequirement())>=0 &&
-
-            vTileMap[fMouseMapX][fMouseMapY] == vTiles[SelectedBuildTile]->GetBase() &&
-
-            fMousePlayerDistance < fReachDistance
+            GetMouse(0).bHeld &&
+            !vTileMap[fMouseMapX][fMouseMapY].back()->vItemsGathered.empty()   // checks if there is anything to gather on this vTile posytion
+            // checks if vTiles posytion is withing a reach
 
        )
     {
-        std::string Building = "Constructing";
-        DrawString(GetMouseX()-Building.size()*8/2,GetMouseY()-20, Building);
-        // width
-        FillRect(GetMouseX()-Building.size()*8/2, GetMouseY()-10, Building.size()*8*fConstruction,10,olc::RED );
-        DrawRect(GetMouseX()-Building.size()*8/2, GetMouseY()-10, Building.size()*8,10, olc::WHITE );
+        // draws "Progess bar"
 
+        MouseText = "Gathering Resourses";
+        if(fMousePlayerDistance > fReachDistance)
+            MouseText = "Target Out of reach";
 
-        fConstruction += 0.6f*fElapsedTime;
-        if (fConstruction >1)
+        else
         {
-            fConstruction =0.0f;
-            //aResourses[vTiles[vTileMap[fMouseMapX-1][fMouseMapY-1]]->GetResource()] += vTiles[vTileMap[fMouseMapX-1][fMouseMapY-1]]->GetRQuantity();
+            FillRect(GetMouseX()-MouseText.size()*8/2, GetMouseY()-10, MouseText.size()*8*fDestruction,10,olc::RED );
+            DrawRect(GetMouseX()-MouseText.size()*8/2, GetMouseY()-10, MouseText.size()*8,10, olc::WHITE );
 
-            aResourses[vTiles[SelectedBuildTile]->GetResource()] -=vTiles[SelectedBuildTile]->GetResourceRequirement();
-            vTileMap[fMouseMapX][fMouseMapY] = SelectedBuildTile;
+            fDestruction += 0.6f*fElapsedTime;
+            if (fDestruction >1)
+            {
+                fDestruction =0.0f;
+
+                // Chechs if item of that type is already in inventory
+                if (FindItemInInventory(vTileMap[fMouseMapX][fMouseMapY].back()->vItemsGathered.back()  )== nullptr)
+                {
+
+                    vInventory.push_back(new ItemSlot(  vTileMap[fMouseMapX][fMouseMapY].back()->vItemsGathered.back(),
+                                                        vTileMap[fMouseMapX][fMouseMapY].back()->vItemsGatheredQuantity.back()));
+
+                }
+                else
+                {
+                    FindItemInInventory(vTileMap[fMouseMapX][fMouseMapY].back()->vItemsGathered.back()  )->Quantity
+                    +=
+                        vTileMap[fMouseMapX][fMouseMapY].back()->vItemsGatheredQuantity.back();
+                }
+                vTileMap[fMouseMapX][fMouseMapY].pop_back();
 
 
+            }
         }
+
+    }
+
+    // BUILDING
+    else if ((int)((float)GetMouseX()/TileSize+fCameraX) ==(int)fMouseMapX &&
+
+             (int)((float)GetMouseY()/TileSize+fCameraY)==(int)fMouseMapY &&
+
+             GetMouse(1).bHeld &&
+
+             !vTiles[ChosenBuildTile]->vItemsRequired.empty() && // later put this check elswhere to give feedbck to player what he is doing wrong
+
+             vTileMap[fMouseMapX][fMouseMapY].size()-1 <  static_cast<int> (vTiles[ChosenBuildTile]->GetZLevel())  // Checks if you want to let's say put a wall in place where there is
+             // alrady a wall or floor on vTile where there is a floor
+
+
+
+            )
+    {
+        MouseText = "Constructing";
+        if (fMousePlayerDistance > fReachDistance)
+            MouseText = "Target out of reach";
+        else if (  IsEnoughItems( vTiles[ChosenBuildTile]->vItemsRequired.front(),vTiles[ChosenBuildTile]->vItemsRequiredQuantity.front() ))
+        {
+            //std::string Building = "Constructing";
+            //DrawString(GetMouseX()-Building.size()*8/2,GetMouseY()-20, Building);
+            // width
+            FillRect(GetMouseX()-MouseText.size()*8/2, GetMouseY()-10, MouseText.size()*8*fConstruction,10,olc::RED );
+            DrawRect(GetMouseX()-MouseText.size()*8/2, GetMouseY()-10, MouseText.size()*8,10, olc::WHITE );
+
+
+            fConstruction += 0.6f*fElapsedTime;
+            if (fConstruction >1)
+            {
+                fConstruction =0.0f;
+
+
+                vTileMap[fMouseMapX][fMouseMapY].push_back(vTiles[ChosenBuildTile]);
+                FindItemInInventory(vTiles[ChosenBuildTile]->vItemsRequired.front())->Quantity -=vTiles[ChosenBuildTile]->vItemsRequiredQuantity.front();
+                int ii=0;
+                for (auto &i: vInventory)
+                {
+                    if (i->Quantity <=0)
+                    {
+                        delete i;
+                        vInventory.erase(vInventory.begin()+ii);
+                    }
+                    ++ii;
+                }
+
+            }
+            else ;
+        }
+        else
+            MouseText = "Not enough Resources !";
 
     }
     else
     {
         fConstruction =0.0f;
+
+        fDestruction =0.0f;
+        MouseText = "";
+
     }
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 else if(Health>0)
 {
     //std::string strAmmo = "Ammo: "
